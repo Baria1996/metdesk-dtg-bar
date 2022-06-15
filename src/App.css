@@ -24,6 +24,16 @@
   background-color: #ddd;
 }
 
+.dtg-box:active {
+  background-color: #aaa;
+}
+
+.selected-dtg-box {
+  margin-top: 5em;
+  font-weight: bold;
+  text-align: center;
+}
+
 .Mui-selected {
   color: white !important;
   background-color: #000 !important;
