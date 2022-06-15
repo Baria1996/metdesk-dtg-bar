@@ -1,48 +1,31 @@
 import * as React from "react";
-import PropTypes from "prop-types";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box className="dtg-container" sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
+import { Box, Tabs, Tab } from "@mui/material";
+import axios from "axios";
+import TabPanel from "./components/TabPanel";
 
 export default function BasicTabs() {
-  const [value, setValue] = React.useState(0);
+  const [tabValue, setTabValue] = React.useState(0);
+  const [issues, setIssues] = React.useState([]);
+
+  React.useEffect(() => {
+    axios
+      .get(
+        `https://api-staging.metdesk.com/get/metdesk/powergen/v2/issues?model=ecop`,
+        {
+          headers: {
+            Authorization: process.env.REACT_APP_POWERGEN_API_KEY,
+          },
+        }
+      )
+      .then((res) => {
+        let reversedIssuesArray = res.data.data.reverse();
+        setIssues(reversedIssuesArray);
+      })
+      .catch((e) => console.log(e));
+  }, []);
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    setTabValue(newValue);
   };
 
   return (
@@ -50,31 +33,34 @@ export default function BasicTabs() {
       <Box sx={{ borderBottom: 0 }}>
         <Tabs
           className="issues-container"
-          value={value}
+          value={tabValue}
           onChange={handleChange}
-          indicatorColor=""
+          indicatorColor="primary"
           variant="scrollable"
-          scrollButtons="auto"
-          aria-label="dtg tabs"
+          scrollButtons={false}
+          aria-label="dtgTabs"
         >
-          <Tab label="Item One" {...a11yProps(0)} />
-          <Tab label="Item Two" {...a11yProps(1)} />
-          <Tab label="Item Three" {...a11yProps(2)} />
-          <Tab label="Item Three" {...a11yProps(3)} />
+          {issues.length > 0 ? (
+            issues.map((issue, id) => <Tab label={issue} key={id} />)
+          ) : (
+            <Tab label="-" />
+          )}
         </Tabs>
       </Box>
-      <TabPanel value={value} index={0}>
-        Item One
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        Item Two
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        Item Three
-      </TabPanel>
-      <TabPanel value={value} index={3}>
-        Item four
-      </TabPanel>
+
+      {issues.length > 0 ? (
+        issues.map((issue, id) => (
+          <TabPanel value={tabValue} index={id} key={id}>
+            {issue} - {id}
+          </TabPanel>
+        ))
+      ) : (
+        <>
+          <TabPanel value={tabValue} index={0}>
+            No issue selected
+          </TabPanel>
+        </>
+      )}
     </Box>
   );
 }
