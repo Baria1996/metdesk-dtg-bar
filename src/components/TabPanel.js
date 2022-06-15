@@ -15,8 +15,8 @@ export default function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box className="dtg-container" sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+        <Box className="dtgs-container" sx={{ p: 3 }}>
+          <Box>{children}</Box>
         </Box>
       )}
     </div>

@@ -3,30 +3,60 @@ import { Box, Tabs, Tab } from "@mui/material";
 import axios from "axios";
 import TabPanel from "./components/TabPanel";
 import moment from "moment";
+import ForecastDTGs from "./components/ForecastDTGs";
 
 export default function BasicTabs() {
-  const [tabValue, setTabValue] = React.useState(0);
-  const [issues, setIssues] = React.useState([]);
+  // todo: latet issue hightlight
+  const [tabValue, setTabValue] = React.useState(0); // value of the selected tab panel
+  const [issues, setIssues] = React.useState([]); // array of issues for the selected model 'ecop'
+  const [dtgs, setDtgs] = React.useState([]); // array of dtgs for the selected issue
 
-  React.useEffect(() => {
-    axios
-      .get(
+  // async function to get all issues for the model 'ecop' and dtgs for the very first issue
+  const getIssues = async () => {
+    try {
+      const issuesResponse = await axios.get(
         `https://api-staging.metdesk.com/get/metdesk/powergen/v2/issues?model=ecop`,
         {
           headers: {
             Authorization: process.env.REACT_APP_POWERGEN_API_KEY,
           },
         }
-      )
-      .then((res) => {
-        let reversedIssuesArray = res.data.data.reverse();
-        setIssues(reversedIssuesArray);
-      })
-      .catch((e) => console.log(e));
+      );
+      const reversedIssuesArray = issuesResponse.data.data.reverse();
+      setIssues(reversedIssuesArray);
+      await getDTGs(reversedIssuesArray[0]);
+    } catch (e) {
+      console.log(e);
+      setIssues([]);
+      setDtgs([]);
+    }
+  };
+
+  // async function to get the forecast DTGs for a selected issue
+  const getDTGs = async (selectedIssue) => {
+    try {
+      const dtgsResponse = await axios.get(
+        `https://api-staging.metdesk.com/get/metdesk/powergen/v2/dtgs?model=ecop&element=combined&interval=model&issue=${selectedIssue}`,
+        {
+          headers: {
+            Authorization: process.env.REACT_APP_POWERGEN_API_KEY,
+          },
+        }
+      );
+      const reversedDtgsArray = dtgsResponse.data.data.reverse();
+      setDtgs(reversedDtgsArray);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  React.useEffect(() => {
+    getIssues();
   }, []);
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
+    getDTGs(issues[newValue]);
   };
 
   return (
@@ -57,10 +87,11 @@ export default function BasicTabs() {
       {issues.length > 0 ? (
         issues.map((issue, id) => (
           <TabPanel value={tabValue} index={id} key={id}>
-            {/* {issue}
-            <br /> */}
-            {moment(issue).utc().format("DD/MM/YYYY - HH:mm:ss")}
-            <br />
+            {dtgs.length > 0 ? (
+              <ForecastDTGs dtgs={dtgs} />
+            ) : (
+              <span>No DTGs available</span>
+            )}
           </TabPanel>
         ))
       ) : (

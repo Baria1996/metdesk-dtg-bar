@@ -1,14 +1,27 @@
-.dtg-container {
+.issues-container {
+  margin: 1em;
+  border-radius: 25px;
+  background-color: #fff;
+}
+
+.dtgs-container {
   background-color: #fff;
   border-radius: 25px;
   margin: 0 1em;
   min-height: 80vh;
 }
 
-.issues-container {
-  margin: 1em;
-  border-radius: 25px;
-  background-color: #fff;
+.dtg-box {
+  border: 1px solid #ddd;
+  display: inline-block;
+  padding: 0.2em 0.5em;
+  margin: 0 0.3em 0.3em 0;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.dtg-box:hover {
+  background-color: #ddd;
 }
 
 .Mui-selected {
