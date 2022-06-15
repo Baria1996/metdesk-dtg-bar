@@ -1,14 +1,27 @@
+.help-button {
+  display: flex;
+  margin: 1em auto;
+  background-color: white;
+  border-radius: 25px;
+  padding: 0.8em;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  border: none;
+  cursor: pointer;
+}
+
 .issues-container {
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   margin: 1em;
   border-radius: 25px;
   background-color: #fff;
 }
 
 .dtgs-container {
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   background-color: #fff;
   border-radius: 25px;
   margin: 0 1em;
-  min-height: 80vh;
+  min-height: 70vh;
 }
 
 .dtg-box {
