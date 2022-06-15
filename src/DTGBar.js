@@ -2,6 +2,7 @@ import * as React from "react";
 import { Box, Tabs, Tab } from "@mui/material";
 import axios from "axios";
 import TabPanel from "./components/TabPanel";
+import moment from "moment";
 
 export default function BasicTabs() {
   const [tabValue, setTabValue] = React.useState(0);
@@ -24,7 +25,7 @@ export default function BasicTabs() {
       .catch((e) => console.log(e));
   }, []);
 
-  const handleChange = (event, newValue) => {
+  const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
 
@@ -34,14 +35,19 @@ export default function BasicTabs() {
         <Tabs
           className="issues-container"
           value={tabValue}
-          onChange={handleChange}
+          onChange={handleTabChange}
           indicatorColor="primary"
           variant="scrollable"
           scrollButtons={false}
           aria-label="dtgTabs"
         >
           {issues.length > 0 ? (
-            issues.map((issue, id) => <Tab label={issue} key={id} />)
+            issues.map((issue, id) => (
+              <Tab
+                label={moment(issue).utc().format("DD/MM/YYYY - HH:mm:ss")}
+                key={id}
+              />
+            ))
           ) : (
             <Tab label="-" />
           )}
@@ -51,7 +57,10 @@ export default function BasicTabs() {
       {issues.length > 0 ? (
         issues.map((issue, id) => (
           <TabPanel value={tabValue} index={id} key={id}>
-            {issue} - {id}
+            {/* {issue}
+            <br /> */}
+            {moment(issue).utc().format("DD/MM/YYYY - HH:mm:ss")}
+            <br />
           </TabPanel>
         ))
       ) : (
