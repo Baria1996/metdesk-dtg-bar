@@ -1,12 +1,27 @@
 .help-button {
   display: flex;
-  margin: 1em auto;
+  margin-top: 1em;
+  margin-left: 1.5em;
   background-color: white;
   border-radius: 25px;
   padding: 0.8em;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   border: none;
   cursor: pointer;
+  float: left;
+}
+
+.filter-button {
+  display: flex;
+  margin-top: 1em;
+  margin-right: 1.5em;
+  background-color: white;
+  border-radius: 25px;
+  padding: 0.8em;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  border: none;
+  cursor: pointer;
+  float: right;
 }
 
 .issues-container {

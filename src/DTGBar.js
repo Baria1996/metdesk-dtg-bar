@@ -59,9 +59,22 @@ export default function BasicTabs() {
     getDTGs(issues[newValue]);
   };
 
+  //   only show midnight issues -> filter array to show only the issues where time is 00:00:00
+  const midnightIssues = () => {
+    const midnightIssues = issues.filter((issue) => {
+      let dt = moment(issue).utc();
+      return dt.hours() === 0 && dt.minutes() === 0 && dt.seconds() === 0;
+    });
+    setIssues(midnightIssues);
+  };
+
   return (
     <Box sx={{ width: "100" }}>
-      <Box sx={{ borderBottom: 0 }}>
+      <button className="filter-button" onClick={midnightIssues}>
+        Midnight Issues
+      </button>
+      <br />
+      <Box sx={{ borderBottom: 0, mt: 6 }}>
         <Tabs
           className="issues-container"
           value={tabValue}
@@ -83,7 +96,6 @@ export default function BasicTabs() {
           )}
         </Tabs>
       </Box>
-
       {issues.length > 0 ? (
         issues.map((issue, id) => (
           <TabPanel value={tabValue} index={id} key={id}>
