@@ -6,16 +6,16 @@ import moment from "moment";
 import ForecastDTGs from "./components/ForecastDTGs";
 
 export default function BasicTabs() {
-  // todo: latet issue hightlight
   const [tabValue, setTabValue] = React.useState(0); // value of the selected tab panel
-  const [issues, setIssues] = React.useState([]); // array of issues for the selected model 'ecop'
+  const [issues, setIssues] = React.useState([]); // array of issues for the selected model
   const [dtgs, setDtgs] = React.useState([]); // array of dtgs for the selected issue
+  const [model, setModel] = React.useState("ecop"); // selected model
 
-  // async function to get all issues for the model 'ecop' and dtgs for the very first issue
+  // async function to get all issues for the selected model and dtgs for the very first issue
   const getIssues = async () => {
     try {
       const issuesResponse = await axios.get(
-        `https://api-staging.metdesk.com/get/metdesk/powergen/v2/issues?model=ecop`,
+        `https://api-staging.metdesk.com/get/metdesk/powergen/v2/issues?model=${model}`,
         {
           headers: {
             Authorization: process.env.REACT_APP_POWERGEN_API_KEY,
@@ -36,7 +36,7 @@ export default function BasicTabs() {
   const getDTGs = async (selectedIssue) => {
     try {
       const dtgsResponse = await axios.get(
-        `https://api-staging.metdesk.com/get/metdesk/powergen/v2/dtgs?model=ecop&element=combined&interval=model&issue=${selectedIssue}`,
+        `https://api-staging.metdesk.com/get/metdesk/powergen/v2/dtgs?model=${model}&element=combined&interval=model&issue=${selectedIssue}`,
         {
           headers: {
             Authorization: process.env.REACT_APP_POWERGEN_API_KEY,
@@ -52,7 +52,7 @@ export default function BasicTabs() {
 
   React.useEffect(() => {
     getIssues();
-  }, []);
+  }, [model]);
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -68,12 +68,29 @@ export default function BasicTabs() {
     setIssues(midnightIssues);
   };
 
+  // set selected model
+  const changeModel = (e) => {
+    setModel(e.target.value);
+  };
+
   const latestIssue = () => {
     setTabValue(0);
   };
 
   return (
     <Box sx={{ width: "100" }}>
+      <select className="filter-button" onChange={changeModel} value={model}>
+        <option hidden value="ecop">
+          Model - ecop
+        </option>
+        <option value="ecop">ecop</option>
+        <option value="eceps">eceps</option>
+        <option value="gfsop">gfsop</option>
+        <option value="gfsens">gfsens</option>
+        <option value="uke4">uke4</option>
+        <option value="icon">icon</option>
+        <option value="arpege">arpege</option>
+      </select>
       <button className="filter-button" onClick={midnightIssues}>
         Midnight Issues Only
       </button>
