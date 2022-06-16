@@ -68,13 +68,20 @@ export default function BasicTabs() {
     setIssues(midnightIssues);
   };
 
+  const latestIssue = () => {
+    setTabValue(0);
+  };
+
   return (
     <Box sx={{ width: "100" }}>
       <button className="filter-button" onClick={midnightIssues}>
-        Midnight Issues
+        Midnight Issues Only
+      </button>
+      <button className="help-button" onClick={latestIssue}>
+        Go to Latest Isssue
       </button>
       <br />
-      <Box sx={{ borderBottom: 0, mt: 6 }}>
+      <Box sx={{ borderBottom: 0, mt: 4 }}>
         <Tabs
           className="issues-container"
           value={tabValue}
@@ -85,12 +92,17 @@ export default function BasicTabs() {
           aria-label="dtgTabs"
         >
           {issues.length > 0 ? (
-            issues.map((issue, id) => (
-              <Tab
-                label={moment(issue).utc().format("DD/MM/YYYY - HH:mm:ss")}
-                key={id}
-              />
-            ))
+            issues.map((issue, id) =>
+              id === 0 ? (
+                <Tab className="issue-button" label="Latest Issue" key={id} />
+              ) : (
+                <Tab
+                  className="issue-button"
+                  label={moment(issue).utc().format("DD/MM/YYYY - HH:mm:ss")}
+                  key={id}
+                />
+              )
+            )
           ) : (
             <Tab label="-" />
           )}
