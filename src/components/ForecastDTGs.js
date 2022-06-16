@@ -5,6 +5,7 @@ import { Box } from "@mui/material";
 export default function ForecastDTGs(props) {
   const { dtgs } = props;
   const [selectedDtg, setSelectedDtg] = React.useState("");
+  const [selectedDtgIndex, setSelectedDtgIndex] = React.useState(0);
   //  by default, the first dtg is selected and displayed as text string
   React.useEffect(() => {
     setSelectedDtg(dtgs[0]);
@@ -15,10 +16,13 @@ export default function ForecastDTGs(props) {
       {dtgs.length > 0
         ? dtgs.map((dtg, id) => (
             <Box
-              className="dtg-box"
+              className={
+                id === selectedDtgIndex ? "dtg-box selected" : "dtg-box"
+              }
               key={id}
               onClick={() => {
                 setSelectedDtg(dtg);
+                setSelectedDtgIndex(id);
               }}
             >
               {id}

@@ -48,6 +48,10 @@
   cursor: pointer;
 }
 
+.dtg-box.selected {
+  background-color: #ddd;
+}
+
 .dtg-box:hover {
   background-color: #ddd;
 }
